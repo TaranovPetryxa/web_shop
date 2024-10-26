@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         REPO_URL = 'https://github.com/TaranovPetryxa/web_shop.git'
-        BRANCH = 'dmain' // Имя нужной ветки репозитория
+        BRANCH = 'main' // Имя нужной ветки репозитория
         //CONFIG_FILE = '/var/jenkins_home/workspace/pipline_app/Unison/appsettings.json' // Путь к  файлу  конфигурации
         CONTAINER_NAME = 'web_shop' // Имя контейнера
         IMAGE_NAME = 'wordpress_custom' // Имя Docker -  образа
