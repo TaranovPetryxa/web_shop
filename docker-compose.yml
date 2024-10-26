@@ -1,0 +1,59 @@
+version: '3.3'
+
+services:
+  wordpress:
+#    build: .
+    image: wordpress_custom
+    container_name: wordpress_web
+    ports:
+      - "8080:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress_db_user
+      WORDPRESS_DB_PASSWORD: cd!995
+      WORDPRESS_DB_NAME: wordpress_db
+    volumes:
+      - ./html:/var/www/html
+      - ./wp-content:/var/www/html/wp-content
+#      - ./my_theme:/var/www/html/wp-content/themes/my-theme
+#      - ./other_plugins:/var/www/html/wp-content/plugins
+    depends_on:
+      - db
+    networks:
+      - network
+
+  db:
+    image: mysql:latest
+    container_name: wordpress_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: cd!995
+      MYSQL_DATABASE: wordpress_db
+      MYSQL_USER: wordpress_db_user
+      MYSQL_PASSWORD: cd!995
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - network
+  
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: cd!995
+    ports:
+      - "88:80"
+    networks:
+      - network
+
+
+volumes:
+  db_data:
+  html:
+  wp-content:
+networks:
+  network:
+    driver: bridge
