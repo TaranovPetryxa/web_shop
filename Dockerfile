@@ -10,11 +10,6 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd mysqli opcache
 
-# Устанавливаем WooCommerce
-#RUN wget https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip \
-#    && unzip woocommerce.latest-stable.zip -d /var/www/html/wp-content/plugins/ \
-#    && rm woocommerce.latest-stable.zip
-
 # Даем необходимые права для плагинов и тем
 RUN chown -R www-data:www-data /var/www/html/wp-content \
     && chmod -R 755 /var/www/html/wp-content
