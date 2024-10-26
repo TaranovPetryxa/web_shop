@@ -1,68 +1,86 @@
 pipeline {
     agent any
 
-    environment {
-        REPO_URL = 'https://github.com/TaranovPetryxa/web_shop.git'
-        BRANCH = 'main' // Имя нужной ветки репозитория
-        //CONFIG_FILE = '/var/jenkins_home/workspace/pipline_app/Unison/appsettings.json' // Путь к  файлу  конфигурации
-        CONTAINER_NAME = 'web_shop' // Имя контейнера
-        IMAGE_NAME = 'web_shop_image' // Имя Docker -  образа
-        DOCKER_HUB_REPO = 'taranovpetryxa/web_shop' // Имя репозитория на Docker Hub
-        DOCKER_CREDENTIALS_ID = 'docker-hub-credentials' // ID учетных данных Docker Hub в Jenkins
-    }
-
     stages {
-        stage('Clone Repository') {
+        stage('Git Clone') {
             steps {
-                // Клонирование нужной ветки
-                git branch: "${BRANCH}", url: "${REPO_URL}"
+                // Клонируем репозиторий
+                git url: 'https://github.com/TaranovPetryxa/web_shop.git', branch: 'main'
             }
         }
 
         stage('Build Docker Image') {
             steps {
+                // Собираем образ из Dockerfile
                 script {
-                    // Сборка Docker образа
-                    sh 'docker build -t ${IMAGE_NAME} .'
+                    def appName = 'wordpress_custom'
+                    def imageTag = 'latest'
+                    sh "docker build -t ${appName}:${imageTag} ."
                 }
             }
         }
 
-        stage('Run Docker Container') {
+        stage('Run and Test Image') {
             steps {
                 script {
-                    // Запуск контейнера с примонтированным файлом конфигурации
-                    sh """
-                        docker run -d --name ${CONTAINER_NAME} -v ${CONFIG_FILE}:/app/ ${IMAGE_NAME} 
-                       """
+                    // Запускаем образ и тестируем его
+                    sh "docker run --rm wordpress_custom:latest your-test-command"
                 }
             }
         }
 
-        stage('Push Docker Image') {
+        stage('Push to Docker Hub') {
+            when {
+                // Проверяем, прошли ли тесты
+                expression { currentBuild.result == null }
+            }
             steps {
                 script {
-                    // Аутентификация в Docker Hub
-                    withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
-                    }
-                    // Тегирование и отправка образа в Docker Hub
+                    def appName = 'wordpress_custom'
+                    def imageTag = 'latest'
+                    // Логинимся в Docker Hub
+                    sh "echo '${DOCKERHUB_PASSWORD}' | docker login -u '${DOCKERHUB_USERNAME}' --password-stdin"
+                    // Загружаем образ в Docker Hub
+                    sh "docker push ${appName}:${imageTag}"
+                }
+            }
+        }
+
+        stage('Deploy to Production Server') {
+            steps {
+                script {
+                    def prodServer = 'prodServer'
+                    def appName = 'wordpress_custom'
+                    def imageTag = 'latest'
+                    
+                    // Подключаемся к продакшн-серверу
                     sh """
-                        docker tag ${IMAGE_NAME}:latest ${DOCKER_HUB_REPO}:latest
-                        docker push ${DOCKER_HUB_REPO}:latest
-                       """
+                    ssh user@${prodServer} 'bash -s' <<-'EOF'
+                        # Клонируем проект
+                        git clone https://github.com/TaranovPetryxa/web_shop.git /home/user/
+                        cd /home/user/web_shop
+                        # Скачиваем образ из Docker Hub
+                        docker pull ${appName}:${imageTag}
+                        # Запускаем через docker-compose
+                        docker compose up -d
+                        # Удаляем лишние образы и контейнеры
+                        docker system prune -af
+                    EOF
+                    """
                 }
             }
         }
     }
 
+    environment {
+        DOCKERHUB_USERNAME = credentials('dockerhub-username') // Credentials for Docker Hub username
+        DOCKERHUB_PASSWORD = credentials('dockerhub-password') // Credentials for Docker Hub password
+    }
+
     post {
         always {
-            // Удаление контейнера после завершения работы 
-            script {
-                sh 'docker rm -f ${CONTAINER_NAME} || true'
-                sh 'docker rmi ${IMAGE_NAME}:latest || true'
-            }
+            // Cleanup, если необходимо
+            sh 'docker system prune -af'
         }
     }
 }
