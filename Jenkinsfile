@@ -1,21 +1,26 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER_IMAGE_NAME = 'wordpress_custom'
+        GIT_REPO_URL = 'https://github.com/TaranovPetryxa/web_shop.git'
+        PROD_SERVER = 'prodServer'
+        PROD_DIR = '/home/user/web_shop'
+        DOCKER_COMPOSE_FILE = 'docker-compose.yml'
+    }
+
     stages {
         stage('Git Clone') {
             steps {
-                // Клонируем репозиторий
-                git url: 'https://github.com/TaranovPetryxa/web_shop.git', branch: 'main'
+                git url: "${GIT_REPO_URL}"
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                // Собираем образ из Dockerfile
                 script {
-                    def appName = 'wordpress_custom'
-                    def imageTag = 'latest'
-                    sh "docker build -t ${appName}:${imageTag} ."
+                    // Сборка образа
+                    sh 'docker build -t ${DOCKER_IMAGE_NAME} .'
                 }
             }
         }
@@ -23,25 +28,20 @@ pipeline {
         stage('Run and Test Image') {
             steps {
                 script {
-                    // Запускаем образ и тестируем его
-                    sh "docker run --rm wordpress_custom:latest your-test-command"
+                    // Запуск контейнера
+                    sh 'docker run --rm ${DOCKER_IMAGE_NAME} ./run-tests.sh' // Замените на команду для запуска тестов
                 }
             }
         }
 
         stage('Push to Docker Hub') {
             when {
-                // Проверяем, прошли ли тесты
-                expression { currentBuild.result == null }
+                expression { currentBuild.result == null } // Только если предыдущий этап успешен
             }
             steps {
                 script {
-                    def appName = 'wordpress_custom'
-                    def imageTag = 'latest'
-                    // Логинимся в Docker Hub
-                    sh "echo '${DOCKERHUB_PASSWORD}' | docker login -u '${DOCKERHUB_USERNAME}' --password-stdin"
-                    // Загружаем образ в Docker Hub
-                    sh "docker push ${appName}:${imageTag}"
+                    // Загрузка образа в Docker Hub
+                    sh 'docker push ${DOCKER_IMAGE_NAME}'
                 }
             }
         }
@@ -49,38 +49,25 @@ pipeline {
         stage('Deploy to Production Server') {
             steps {
                 script {
-                    def prodServer = 'prodServer'
-                    def appName = 'wordpress_custom'
-                    def imageTag = 'latest'
-                    
-                    // Подключаемся к продакшн-серверу
+                    // Подключение к продакшн серверу
                     sh """
-                    ssh user@${prodServer} 'bash -s' <<-'EOF'
-                        # Клонируем проект
-                        git clone https://github.com/TaranovPetryxa/web_shop.git /home/user/
-                        cd /home/user/web_shop
-                        # Скачиваем образ из Docker Hub
-                        docker pull ${appName}:${imageTag}
-                        # Запускаем через docker-compose
-                        docker compose up -d
-                        # Удаляем лишние образы и контейнеры
-                        docker system prune -af
-                    EOF
+                    ssh user@${PROD_SERVER} '
+                        cd ${PROD_DIR} &&
+                        git clone ${GIT_REPO_URL} --single-branch --branch main . || (git pull origin main) &&
+                        docker compose pull &&
+                        docker compose up -d &&
+                        docker system prune -f
+                    '
                     """
                 }
             }
         }
     }
-
-    environment {
-        DOCKERHUB_USERNAME = credentials('dockerhub-username') // Credentials for Docker Hub username
-        DOCKERHUB_PASSWORD = credentials('dockerhub-password') // Credentials for Docker Hub password
-    }
-
+    
     post {
-        always {
-            // Cleanup, если необходимо
-            sh 'docker system prune -af'
+        cleanup {
+            // Удаление временных файлов и контейнеров
+            sh 'docker system prune -f'
         }
     }
 }
