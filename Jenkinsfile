@@ -2,72 +2,70 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE_NAME = 'wordpress_custom'
-        GIT_REPO_URL = 'https://github.com/TaranovPetryxa/web_shop.git'
-        PROD_SERVER = 'prodServer'
-        PROD_DIR = '/home/user/web_shop'
-        DOCKER_COMPOSE_FILE = 'docker-compose.yml'
+        REPO_URL = 'https://github.com/TaranovPetryxa/web_shop.git'
+        BRANCH = 'dmain' // Имя нужной ветки репозитория
+        //CONFIG_FILE = '/var/jenkins_home/workspace/pipline_app/Unison/appsettings.json' // Путь к  файлу  конфигурации
+        CONTAINER_NAME = 'web_shop' // Имя контейнера
+        IMAGE_NAME = 'wordpress_custom' // Имя Docker -  образа
+        DOCKER_HUB_REPO = '/taranovpetryxa/web_shop/' // Имя репозитория на Docker Hub
+        DOCKER_CREDENTIALS_ID = 'docker-hub-credentials' // ID учетных данных Docker Hub в Jenkins
     }
 
     stages {
-        stage('Git Clone') {
+        stage('Clone Repository') {
             steps {
-                git url: "${GIT_REPO_URL}"
+                // Клонирование нужной ветки
+                git branch: "${BRANCH}", url: "${REPO_URL}"
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Сборка образа
-                    sh 'docker build -t ${DOCKER_IMAGE_NAME} .'
+                    // Сборка Docker образа
+                    sh 'docker build -t ${IMAGE_NAME} .'
                 }
             }
         }
 
-        stage('Run and Test Image') {
+        stage('Run Docker Container') {
             steps {
                 script {
-                    // Запуск контейнера
-                    sh 'docker run --rm ${DOCKER_IMAGE_NAME}' // ./run-tests.sh' // Замените на команду для запуска тестов
-                }
-            }
-        }
-
-        stage('Push to Docker Hub') {
-            when {
-                expression { currentBuild.result == null } // Только если предыдущий этап успешен
-            }
-            steps {
-                script {
-                    // Загрузка образа в Docker Hub
-                    sh 'docker push ${DOCKER_IMAGE_NAME}'
-                }
-            }
-        }
-
-        stage('Deploy to Production Server') {
-            steps {
-                script {
-                    // Подключение к продакшн серверу
+                    // Запуск контейнера с примонтированным файлом конфигурации
+                    //sh """
+                    //    docker run -d --name ${CONTAINER_NAME} -v ${CONFIG_FILE}:/app/ ${IMAGE_NAME} 
+                    //   """
                     sh """
-                    ssh user@${PROD_SERVER} '
-                        cd ${PROD_DIR} &&
-                        git clone ${GIT_REPO_URL} --single-branch --branch main . || (git pull origin main) &&
-                        docker compose pull &&
-                        docker compose up -d &&
-                        docker system prune -f
-                    '
-                    """
+                        docker run -d --name ${CONTAINER_NAME} -p 80:80 ${IMAGE_NAME} 
+                       """
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    // Аутентификация в Docker Hub
+                    withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+                    }
+                    // Тегирование и отправка образа в Docker Hub
+                    sh """
+                        docker tag ${IMAGE_NAME}:latest ${DOCKER_HUB_REPO}:latest
+                        docker push ${DOCKER_HUB_REPO}:latest
+                       """
                 }
             }
         }
     }
-    
+
     post {
-        cleanup {
-            // Удаление временных файлов и контейнеров
-            sh 'docker system prune -f'
+        always {
+            // Удаление контейнера после завершения работы 
+            script {
+                sh 'docker rm -f ${CONTAINER_NAME} || true'
+                sh 'docker rmi ${IMAGE_NAME}:latest || true'
+            }
         }
     }
 }
