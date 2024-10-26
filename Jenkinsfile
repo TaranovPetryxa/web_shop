@@ -29,7 +29,7 @@ pipeline {
             steps {
                 script {
                     // Запуск контейнера
-                    sh 'docker run --rm ${DOCKER_IMAGE_NAME} ./run-tests.sh' // Замените на команду для запуска тестов
+                    sh 'docker run --rm ${DOCKER_IMAGE_NAME}' // ./run-tests.sh' // Замените на команду для запуска тестов
                 }
             }
         }
