@@ -36,7 +36,7 @@ pipeline {
                     //    docker run -d --name ${CONTAINER_NAME} -v ${CONFIG_FILE}:/app/ ${IMAGE_NAME} 
                     //   """
                     sh """
-                        docker run -d --name ${CONTAINER_NAME} -p 80:80 ${IMAGE_NAME} 
+                        docker run -d --name ${CONTAINER_NAME} -p 8080:80 ${IMAGE_NAME} 
                        """
                 }
             }
