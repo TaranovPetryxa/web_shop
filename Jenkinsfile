@@ -7,7 +7,7 @@ pipeline {
         //CONFIG_FILE = '/var/jenkins_home/workspace/pipline_app/Unison/appsettings.json' // Путь к  файлу  конфигурации
         CONTAINER_NAME = 'web_shop' // Имя контейнера
         IMAGE_NAME = 'wordpress_custom' // Имя Docker -  образа
-        DOCKER_HUB_REPO = '/taranovpetryxa/web_shop/' // Имя репозитория на Docker Hub
+        DOCKER_HUB_REPO = 'taranovpetryxa/web_shop' // Имя репозитория на Docker Hub
         DOCKER_CREDENTIALS_ID = 'docker-hub-credentials' // ID учетных данных Docker Hub в Jenkins
     }
 
