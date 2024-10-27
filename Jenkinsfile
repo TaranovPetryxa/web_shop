@@ -65,7 +65,7 @@ pipeline {
                 script {
                     // Подключение к продакшн серверу
                     sh """
-                    ssh user@${PROD_SERVER} '
+                    ssh user@192.168.1.10 -p 222 '
                         cd ~ &&
                         git clone ${REPO_URL} --single-branch --branch main . || (git pull origin main) &&
                         cd ${PROD_DIR} &&
