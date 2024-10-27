@@ -10,7 +10,7 @@ pipeline {
         DOCKER_HUB_REPO = 'taranovpetryxa/web_shop' // Имя репозитория на Docker Hub
         DOCKER_CREDENTIALS_ID = 'docker-hub-credentials' // ID учетных данных Docker Hub в Jenkins
         PROD_SERVER = '192.168.1.10'
-        PROD_DIR = '/home/user/web_shop'
+        PROD_DIR = '/home/user/web_shop/'
     }
 
     stages {
