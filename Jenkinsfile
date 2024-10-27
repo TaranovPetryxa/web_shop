@@ -10,6 +10,7 @@ pipeline {
         DOCKER_CREDENTIALS_ID = 'docker-hub-credentials'
         PROD_SERVER = '192.168.1.10'
         PROD_DIR = '/home/user/'
+        SSH_PORT = '222' // Указываем нестандартный порт
     }
 
     stages {
@@ -54,7 +55,7 @@ pipeline {
                 script {
                     def sshKeyPath = '~/.ssh/id_rsa'
                     sh """
-                    ssh -i ${sshKeyPath} -o StrictHostKeyChecking=no user@${PROD_SERVER} << 'EOF'
+                    ssh -i ${sshKeyPath} -o StrictHostKeyChecking=no -p ${SSH_PORT} user@${PROD_SERVER} << 'EOF'
                         set -e
                         echo "Deploying to production server at ${PROD_SERVER}..."
 
