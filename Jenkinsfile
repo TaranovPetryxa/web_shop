@@ -80,17 +80,16 @@ pipeline {
                 docker system prune -f
             EOF
             """
-        }
-    }
-}
-
-
-    post {
-        always {
-            // Удаление контейнера после завершения работы 
-            script {
-                sh 'docker rm -f ${CONTAINER_NAME} || true'
-                sh 'docker rmi ${IMAGE_NAME}:latest || true'
+               }
+           }
+       }
+        
+        post {
+            always {
+                // Удаление контейнера после завершения работы 
+                script {
+                    sh 'docker rm -f ${CONTAINER_NAME} || true'
+                    sh 'docker rmi ${IMAGE_NAME}:latest || true'
            }
         }
      }
