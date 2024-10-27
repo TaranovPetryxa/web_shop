@@ -65,14 +65,7 @@ pipeline {
                 script {
                     // Подключение к продакшн серверу
                     sh """
-                    ssh user@192.168.1.10 -p 222 '
-                        cd ~ &&
-                        git clone ${REPO_URL} --single-branch --branch main . || (git pull origin main) &&
-                        cd ${PROD_DIR} &&
-                        docker compose pull &&
-                        docker compose up -d &&
-                        docker system prune -f
-                    '
+                    ssh user@192.168.1.10 -p 222
                     """
                 }
             }
