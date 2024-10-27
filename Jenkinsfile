@@ -9,7 +9,7 @@ pipeline {
         IMAGE_NAME = 'wordpress_custom' // Имя Docker -  образа
         DOCKER_HUB_REPO = 'taranovpetryxa/web_shop' // Имя репозитория на Docker Hub
         DOCKER_CREDENTIALS_ID = 'docker-hub-credentials' // ID учетных данных Docker Hub в Jenkins
-        PROD_SERVER = '192.168.1.10'
+        PROD_SERVER = '192.168.1.10 -p 222'
         PROD_DIR = '/home/user/web_shop/'
     }
 
@@ -65,7 +65,7 @@ pipeline {
                 script {
                     // Подключение к продакшн серверу
                     sh """
-                    ssh user@${PROD_SERVER} -p 222'
+                    ssh user@${PROD_SERVER} '
                         cd ~ &&
                         git clone ${REPO_URL} --single-branch --branch main . || (git pull origin main) &&
                         cd ${PROD_DIR} &&
