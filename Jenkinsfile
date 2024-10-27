@@ -2,22 +2,22 @@ pipeline {
     agent any
 
     environment {
-        REPO_URL = 'https://github.com/TaranovPetryxa/web_shop.git'
+        GIT_REPO_URL = 'https://github.com/TaranovPetryxa/web_shop.git'
         BRANCH = 'main' // Имя нужной ветки репозитория
         //CONFIG_FILE = '/var/jenkins_home/workspace/pipline_app/Unison/appsettings.json' // Путь к  файлу  конфигурации
         CONTAINER_NAME = 'web_shop' // Имя контейнера
         IMAGE_NAME = 'wordpress_custom' // Имя Docker -  образа
         DOCKER_HUB_REPO = 'taranovpetryxa/web_shop' // Имя репозитория на Docker Hub
         DOCKER_CREDENTIALS_ID = 'docker-hub-credentials' // ID учетных данных Docker Hub в Jenkins
-        PROD_SERVER = '192.168.1.10 -p 222'
-        PROD_DIR = '/home/user/web_shop/'
+        PROD_SERVER = '192.168.1.10'
+        PROD_DIR = '/home/user/'
     }
 
     stages {
         stage('Clone Repository') {
             steps {
                 // Клонирование нужной ветки
-                git branch: "${BRANCH}", url: "${REPO_URL}"
+                git branch: "${BRANCH}", url: "${GIT_REPO_URL}"
             }
         }
 
@@ -63,14 +63,27 @@ pipeline {
         stage('Deploy to Production Server') {
             steps {
                 script {
-                    // Подключение к продакшн серверу
-                    sh """
-                    ssh user@192.168.1.10
-                    """
-                }
-            }
-        }   
+                // Путь к приватному ключу (замените на реальный путь)
+                def sshKeyPath = '~/.ssh/id_rsa'
+
+                // Подключение к продакшн серверу и выполнение команд развертывания
+                sh """
+                ssh -i ${sshKeyPath} -o StrictHostKeyChecking=no user@${PROD_SERVER} << 'EOF'
+                set -e
+                echo "Deploying to production server at ${PROD_SERVER}..."
+
+                cd ${PROD_DIR} ||
+                git clone ${GIT_REPO_URL} --single-branch --branch main . || (git pull origin main)
+                
+                docker compose pull
+                docker compose up -d
+                docker system prune -f
+            EOF
+            """
+        }
     }
+}
+
 
     post {
         always {
