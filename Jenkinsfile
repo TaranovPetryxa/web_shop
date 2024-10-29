@@ -11,6 +11,7 @@ pipeline {
         PROD_SERVER = '192.168.1.5'
         PROD_DIR = '/home/user/'
         SSH_PORT = '222' // Указываем нестандартный порт
+        sshKeyPath = '/var/jenkins_home/.ssh/ssh_host_rsa_key.pub'
     }
 
     stages {
@@ -53,7 +54,6 @@ pipeline {
         stage('Deploy to Production Server') {
             steps {
                 script {
-                    def sshKeyPath = '/var/jenkins_home/.ssh/id_rsa'
                     sh """
                     ssh -i ${sshKeyPath} -o StrictHostKeyChecking=no -p ${SSH_PORT} user@${PROD_SERVER} << 'EOF'
                         set -e
@@ -64,7 +64,6 @@ pipeline {
                         else
                             cd ${PROD_DIR} && git pull origin ${BRANCH}
                         fi
-                        
                         docker compose pull
                         docker compose up -d
                         docker system prune -f
