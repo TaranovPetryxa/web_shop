@@ -55,16 +55,15 @@ pipeline {
             steps {
                 script {
                     sh """
-                    ssh -i ${sshKeyPath} -o StrictHostKeyChecking=no -p ${SSH_PORT} user@${PROD_SERVER} << "EOF"
+                    ssh -i ${sshKeyPath} -o StrictHostKeyChecking=no -p ${SSH_PORT} user@${PROD_SERVER} << 'EOF'
                         set -e
                         echo "Deploying to production server at ${PROD_SERVER}..."
-
                         mkdir ${PROD_DIR}
                         git clone ${GIT_REPO_URL} --single-branch --branch ${BRANCH} ${PROD_DIR}
                         cd ${PROD_DIR}
                         docker compose up -d 
                         docker system prune -f
-                        EOF
+                    EOF
                     """
                 }
             }
