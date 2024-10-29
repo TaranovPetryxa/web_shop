@@ -8,7 +8,7 @@ pipeline {
         IMAGE_NAME = 'wordpress_custom'
         DOCKER_HUB_REPO = 'taranovpetryxa/web_shop'
         DOCKER_CREDENTIALS_ID = 'docker-hub-credentials'
-        PROD_SERVER = '192.168.1.10'
+        PROD_SERVER = '192.168.1.5'
         PROD_DIR = '/home/user/'
         SSH_PORT = '222' // Указываем нестандартный порт
     }
