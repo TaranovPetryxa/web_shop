@@ -63,6 +63,7 @@ pipeline {
                         git clone ${GIT_REPO_URL} --single-branch --branch ${BRANCH} ${PROD_DIR}
                         cd ${PROD_DIR}
                         docker compose up -d 
+                        docker system prune -f
                     """
                 }
             }
