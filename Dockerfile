@@ -15,7 +15,7 @@ RUN chown -R www-data:www-data /var/www/html/wp-content \
     && chmod -R 755 /var/www/html/wp-content
 
 # Копируем данные для WordPress
- COPY ./wp-content/ /var/www/html/wp-content/
+ #COPY ./wp-content/ /var/www/html/wp-content/
 
 # Открываем порт 80
 EXPOSE 80
