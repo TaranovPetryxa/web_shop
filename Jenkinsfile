@@ -9,7 +9,7 @@ pipeline {
         DOCKER_HUB_REPO = 'taranovpetryxa/web_shop'
         DOCKER_CREDENTIALS_ID = 'docker-hub-credentials'
         PROD_SERVER = '192.168.1.5'
-        PROD_DIR = '/home/user/'
+        PROD_DIR = '/home/user/web_shop/'
         SSH_PORT = '222' // Указываем нестандартный порт
         sshKeyPath = '/var/jenkins_home/.ssh/id_rsa'
     }
@@ -59,7 +59,7 @@ pipeline {
                         set -e
                         echo "Deploying to production server at ${PROD_SERVER}..."
 
-                        cd ${PROD_DIR}
+                        mkdir ${PROD_DIR}
                         git clone ${GIT_REPO_URL} --single-branch --branch ${BRANCH} ${PROD_DIR}
                         docker compose up -d
                         docker system prune -f
