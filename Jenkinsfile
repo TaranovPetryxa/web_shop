@@ -59,12 +59,8 @@ pipeline {
                         set -e
                         echo "Deploying to production server at ${PROD_SERVER}..."
 
-                        if [ ! -d "${PROD_DIR}" ]; then
-                            git clone ${GIT_REPO_URL} --single-branch --branch ${BRANCH} ${PROD_DIR}
-                        else
-                            cd ${PROD_DIR} && git pull origin ${BRANCH}
-                        fi
-                        docker compose pull
+                        cd ${PROD_DIR}
+                        git clone ${GIT_REPO_URL} --single-branch --branch ${BRANCH} ${PROD_DIR}
                         docker compose up -d
                         docker system prune -f
                     EOF
