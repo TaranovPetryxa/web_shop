@@ -53,7 +53,7 @@ pipeline {
         stage('Deploy to Production Server') {
             steps {
                 script {
-                    def sshKeyPath = '~/.ssh/id_rsa'
+                    def sshKeyPath = '/var/jenkins_home/.ssh/id_rsa'
                     sh """
                     ssh -i ${sshKeyPath} -o StrictHostKeyChecking=no -p ${SSH_PORT} user@${PROD_SERVER} << 'EOF'
                         set -e
