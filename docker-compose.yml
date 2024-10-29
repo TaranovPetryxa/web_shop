@@ -3,7 +3,7 @@ version: '3.3'
 services:
   wordpress:
 #    build: .
-    image: wordpress_custom
+    image: taranovpetryxa/web_shop:latest
     container_name: wordpress_web
     ports:
       - "8080:80"
