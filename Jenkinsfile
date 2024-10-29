@@ -61,8 +61,6 @@ pipeline {
 
                         mkdir ${PROD_DIR}
                         git clone ${GIT_REPO_URL} --single-branch --branch ${BRANCH} ${PROD_DIR}
-                        chown -R www-data:www-data /var/www/html/wp-content/
-                        chmod -R 755 /var/www/html/wp-content/
                         cd ${PROD_DIR}
                         docker compose up -d
                         docker system prune -f
