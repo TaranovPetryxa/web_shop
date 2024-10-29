@@ -11,7 +11,7 @@ pipeline {
         PROD_SERVER = '192.168.1.5'
         PROD_DIR = '/home/user/'
         SSH_PORT = '222' // Указываем нестандартный порт
-        sshKeyPath = '/var/jenkins_home/.ssh/ssh_host_rsa_key.pub'
+        sshKeyPath = '/var/jenkins_home/.ssh/ssh_host_rsa_key'
     }
 
     stages {
