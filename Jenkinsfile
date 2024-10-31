@@ -40,6 +40,11 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
+                    // Проверка, запущен ли контейнер WordPress
+                        def containerStatus = sh(script: 'docker inspect -f "{{.State.Running}}" ${CONTAINER_NAME}', returnStdout: true).trim()
+                        if (containerStatus != 'true') {
+                         error("Контейнер не запущен. Пуш Docker образа остановлен.")
+                    }
                     withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
                     }
