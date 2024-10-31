@@ -43,8 +43,12 @@ pipeline {
                     // Проверка, запущен ли контейнер WordPress
                         def containerStatus = sh(script: 'docker inspect -f "{{.State.Running}}" ${CONTAINER_NAME}', returnStdout: true).trim()
                         if (containerStatus != 'true') {
-                         error("Контейнер не запущен. Пуш Docker образа остановлен.")
-                    }
+                            error("Контейнер ${CONTAINER_NAME} не запущен. Пуш Docker-образа остановлен.")
+                        }else {
+                            echo "Контейнер ${CONTAINER_NAME} запущен и работает"
+                        }
+
+                    
                     withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
                     }
