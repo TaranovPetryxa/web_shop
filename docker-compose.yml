@@ -14,10 +14,10 @@ services:
       WORDPRESS_DB_NAME: wordpress_db
     volumes:
       - ./html:/var/www/html
-      - ./wp-content:/var/www/html/wp-content
-      - ./wp-content/uploads:/var/www/html/wp-content/uploads
-      - ./wp-content/themes:/var/www/html/wp-content/themes
-      - ./wp-content/plugins:/var/www/html/wp-content/plugins
+#      - ./wp-content:/var/www/html/wp-content
+#      - ./wp-content/uploads:/var/www/html/wp-content/uploads
+#      - ./wp-content/themes:/var/www/html/wp-content/themes
+#      - ./wp-content/plugins:/var/www/html/wp-content/plugins
     depends_on:
       - db
     networks:
@@ -36,25 +36,25 @@ services:
       - ./db_data:/var/lib/mysql
     networks:
       - network
-  
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: phpmyadmin
-    restart: unless-stopped
-    environment:
-      PMA_HOST: db
-      PMA_USER: root
-      PMA_PASSWORD: cd!995
-    ports:
-      - "88:80"
-    networks:
-      - network
+
+#  phpmyadmin:
+#    image: phpmyadmin/phpmyadmin
+#    container_name: phpmyadmin
+#    restart: unless-stopped
+#    environment:
+#      PMA_HOST: db
+#      PMA_USER: root
+#      PMA_PASSWORD: cd!995
+#    ports:
+#      - "88:80"
+#    networks:
+#      - network
 
 
 volumes:
   db_data:
   html:
-  wp-content:
+#  wp-content:
 networks:
   network:
     driver: bridge
