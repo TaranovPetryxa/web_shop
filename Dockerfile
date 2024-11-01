@@ -1,25 +1,17 @@
-# Используем официальное изображение WordPress
+# Используем официальный образ WordPress
 FROM wordpress:latest
 
-# Устанавливаем необходимые расширения PHP для работы WordPress и WooCommerce
-RUN apt-get update && apt-get install -y \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    unzip \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd mysqli opcache
+# Устанавливаем необходимые расширения PHP (если нужно)
+RUN docker-php-ext-install mysqli
 
-# Даем необходимые права для плагинов и тем
-RUN chown -R www-data:www-data /var/www/html/wp-content \
-    && chmod -R 755 /var/www/html/wp-content
+# Копируем настройки конфигурации WordPress (если у вас есть)
+# COPY wp-config.php /var/www/html/wp-config.php
 
-# Копируем данные для WordPress
- #COPY ./wp-content/ /var/www/html/wp-content/
+# Устанавливаем права доступа
+RUN chown -R www-data:www-data /var/www/html
+
+# Указываем рабочую директорию
+WORKDIR /var/www/html
 
 # Открываем порт 80
 EXPOSE 80
-
-# Запускаем Apache
-CMD ["apache2-foreground"]
-
