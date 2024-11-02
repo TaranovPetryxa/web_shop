@@ -1,4 +1,4 @@
-/**
+/** 
  * @output wp-admin/js/application-passwords.js
  */
 
