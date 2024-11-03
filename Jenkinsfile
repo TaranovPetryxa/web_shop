@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         GIT_REPO_URL = 'https://github.com/TaranovPetryxa/web_shop.git'
-        BRANCH = 'main'
+        BRANCH = 'aws'
         CONTAINER_NAME = 'web_shop'
         IMAGE_NAME = 'wordpress_custom'
         DOCKER_HUB_REPO = 'taranovpetryxa/web_shop'
