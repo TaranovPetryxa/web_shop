@@ -75,14 +75,14 @@ define( 'DB_COLLATE', getenv_docker('WORDPRESS_DB_COLLATE', '') );
  *
  * @since 2.6.0
  */
-define( 'AUTH_KEY',         getenv_docker('WORDPRESS_AUTH_KEY',         '89a146c93bb395ae7926d2b1b7fee10a3905c116') );
-define( 'SECURE_AUTH_KEY',  getenv_docker('WORDPRESS_SECURE_AUTH_KEY',  '256a9d19b46b27bd8e4c2a2c629e52809c676ae9') );
-define( 'LOGGED_IN_KEY',    getenv_docker('WORDPRESS_LOGGED_IN_KEY',    '53cc3430549babadf1976d65403c4a7fe3d52a59') );
-define( 'NONCE_KEY',        getenv_docker('WORDPRESS_NONCE_KEY',        '26f27c0bff5b7615b31086a2d164e50e8e4e8c56') );
-define( 'AUTH_SALT',        getenv_docker('WORDPRESS_AUTH_SALT',        '04c82be85755ff54e7e6b02fe624aae48f362ba4') );
-define( 'SECURE_AUTH_SALT', getenv_docker('WORDPRESS_SECURE_AUTH_SALT', '97dfaf22be9bb5ceb10802fa3ee2f3d535037e7c') );
-define( 'LOGGED_IN_SALT',   getenv_docker('WORDPRESS_LOGGED_IN_SALT',   'e04774dd8a920779de8958b168fd4f773fa33495') );
-define( 'NONCE_SALT',       getenv_docker('WORDPRESS_NONCE_SALT',       '69c50943d732c356b60a6455cafa9af8dcf77808') );
+define( 'AUTH_KEY',         getenv_docker('WORDPRESS_AUTH_KEY',         '2061cb495c0568cbb5318bd0ab82b0c420bdf840') );
+define( 'SECURE_AUTH_KEY',  getenv_docker('WORDPRESS_SECURE_AUTH_KEY',  'abc5e9c58596a5cabb3389934bc9b64d2dc2c854') );
+define( 'LOGGED_IN_KEY',    getenv_docker('WORDPRESS_LOGGED_IN_KEY',    '04237494f0a65ad44dcb3707211171e899fe302d') );
+define( 'NONCE_KEY',        getenv_docker('WORDPRESS_NONCE_KEY',        '6596e827d414bef618c64f7728dab08aefd05cba') );
+define( 'AUTH_SALT',        getenv_docker('WORDPRESS_AUTH_SALT',        '7621b92846a52f17ce77ac41f88c6846c76d426b') );
+define( 'SECURE_AUTH_SALT', getenv_docker('WORDPRESS_SECURE_AUTH_SALT', 'd7e7e9b7a9fe4330b534ca892511a98b88e67d92') );
+define( 'LOGGED_IN_SALT',   getenv_docker('WORDPRESS_LOGGED_IN_SALT',   '45c933190b56285e3842cf84bbdf5b59012bd1c6') );
+define( 'NONCE_SALT',       getenv_docker('WORDPRESS_NONCE_SALT',       'a6f1cbcc0332cd7ec762380f0bee7a024ff7bfe6') );
 // (See also https://wordpress.stackexchange.com/a/152905/199287)
 
 /**#@-*/
@@ -137,4 +137,3 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /** Sets up WordPress vars and included files. */
 require_once ABSPATH . 'wp-settings.php';
-define('WP_MEMORY_LIMIT', '256M');
