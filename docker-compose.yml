@@ -1,4 +1,4 @@
-#version: '3.3'
+version: '3.8'
 
 services:
 
@@ -51,6 +51,14 @@ services:
     networks:
       - shop_network
 
+node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    ports:
+      - "9100:9100"
+    restart: unless-stopped
+    networks:
+      - shop_network
 #  phpmyadmin:
 #    image: phpmyadmin/phpmyadmin
 #    container_name: phpmyadmin
