@@ -51,7 +51,7 @@ services:
     networks:
       - shop_network
 
-node-exporter:
+  node-exporter:
     image: prom/node-exporter:latest
     container_name: node-exporter
     ports:
