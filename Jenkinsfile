@@ -10,7 +10,7 @@ pipeline {
         DOCKER_CREDENTIALS_ID = 'docker-hub-credentials'
         PROD_SERVER = '18.198.213.167'
         PROD_DIR = '/home/user/web_shop/'
-        SSH_PORT = '222'  // Указываем нестандартный порт
+        SSH_PORT = '222'  // Указываем нестандартный по рт
         sshKeyPath = '/var/jenkins_home/.ssh/id_rsa'
     }
 
