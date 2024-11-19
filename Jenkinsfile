@@ -40,7 +40,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    // Проверка, запущен ли контейнер WordPress
+                    // Проверка, запущен ли контейнер #WordPress
                         def containerStatus = sh(script: 'docker inspect -f "{{.State.Running}}" ${CONTAINER_NAME}', returnStdout: true).trim()
                         if (containerStatus != 'true') {
                             error("Контейнер ${CONTAINER_NAME} не запущен. Пуш Docker-образа остановлен.")
