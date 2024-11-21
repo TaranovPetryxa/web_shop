@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Plugins - WooCommerce - Stable (latest release) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2024-11-18 15:01:55+0000\n"
+"PO-Revision-Date: 2024-11-19 17:07:54+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -10,6 +10,11 @@ msgstr ""
 "X-Generator: GlotPress/4.0.1\n"
 "Language: uk_UA\n"
 "Project-Id-Version: Plugins - WooCommerce - Stable (latest release)\n"
+
+#: assets/client/blocks/product-image/block.json
+msgctxt "block title"
+msgid "Product Image"
+msgstr "Зображення товару"
 
 #: assets/client/blocks/product-sale-badge/block.json
 msgctxt "block description"
@@ -55,6 +60,11 @@ msgstr "Перелік"
 msgctxt "block title"
 msgid "Attribute (Experimental)"
 msgstr "Атрибут (експериментальний)"
+
+#: assets/client/blocks/product-filter-active/block.json
+msgctxt "block title"
+msgid "Active (Experimental)"
+msgstr "Активні (експериментальний)"
 
 #: assets/client/blocks/order-confirmation-create-account/block.json
 msgctxt "block description"
@@ -115,6 +125,18 @@ msgstr "Оплата:"
 msgid "Order #:"
 msgstr "№ замовлення:"
 
+#: src/Blocks/BlockTypes/OrderConfirmation/CreateAccount.php:161
+msgid "Your account has been successfully created"
+msgstr "Ваш обліковий запис успішно створено"
+
+#: src/Blocks/BlockTypes/OrderConfirmation/CreateAccount.php:65
+msgid "Password must be at least 8 characters."
+msgstr "Пароль повинен містити не менше 8 символів."
+
+#: src/Blocks/BlockTypes/OrderConfirmation/CreateAccount.php:61
+msgid "The email address provided does not match the email address on this order."
+msgstr "Надана адреса електронної пошти не відповідає адресі, вказаній у цьому замовленні."
+
 #: src/Blocks/BlockTypes/OrderConfirmation/CreateAccount.php:56
 msgid "This order is already linked to a user account."
 msgstr "Це замовлення вже прив'язане до облікового запису користувача."
@@ -152,6 +174,10 @@ msgstr "Номер:"
 #: includes/widgets/class-wc-widget-brand-thumbnails.php:49
 msgid "WooCommerce Brand Thumbnails"
 msgstr "Мініатюри брендів WooCommerce"
+
+#: includes/widgets/class-wc-widget-brand-nav.php:313
+msgid "Any Brand"
+msgstr "Всі бренди"
 
 #: includes/widgets/class-wc-widget-brand-nav.php:200
 msgid "Display Type:"
